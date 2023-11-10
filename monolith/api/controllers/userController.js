@@ -11,7 +11,6 @@ class User {
 
       const users = await userModel.getAllUsers()
 
-      console.log('In controller', users.data)
       const sortedUsers = users.data.sort((a, b) => {
         if (a[sortField] < b[sortField]) {
           return sortOrder === 'asc' ? -1 : 1
@@ -22,10 +21,15 @@ class User {
         }
       })
 
-      const filterParams = req.query.filter ?? {}
+      const filterParams = req.query.filter ? {[req.query.filter]: req.query[req.query.filter]} : {}
+
       const filteredUsers = sortedUsers.filter(user => {
         for (const [key, value] of Object.entries(filterParams)) {
-          if (user[key] !== value) {
+          const userValue = String(user[key]).toLowerCase()
+          const filterValue = String(value).toLowerCase()
+          console.log(`Key: ${key}, User Value: ${userValue}, Filter Value: ${filterValue}`)
+
+          if (!userValue.includes(filterValue)) {
             return false
           }
         }

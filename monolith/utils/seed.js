@@ -9,7 +9,8 @@ async function populateUserData() {
     email: faker.internet.email(),
     location: faker.location.city(),
     company: faker.company.name(),
-    registrationDate: faker.date.past()
+    registrationDate: faker.date.past(),
+    avatar: faker.image.avatar()
   }))
 
   try {

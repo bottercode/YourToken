@@ -12,16 +12,27 @@ class User {
       const users = await userModel.getAllUsers()
 
       const sortedUsers = users.data.sort((a, b) => {
-        if (a[sortField] < b[sortField]) {
-          return sortOrder === 'asc' ? -1 : 1
-        } else if (a[sortField] > b[sortField]) {
-          return sortOrder === 'asc' ? 1 : -1
-        } else {
-          return 0
-        }
+        const comparison = String(a[sortField]).localeCompare(b[sortField], undefined, {sensitivity: 'base'})
+
+        return sortOrder === 'asc' ? comparison : -comparison
       })
 
-      const filterParams = req.query.filter ? {[req.query.filter]: req.query[req.query.filter]} : {}
+      const filterParams = {}
+      // Check if there is at least one filter parameter in the request
+      if (req.query.filter) {
+        // If there is only one filter, add it to the filterParams object
+        if (!Array.isArray(req.query.filter)) {
+          filterParams[req.query.filter] = req.query[req.query.filter]
+        } else {
+          // If there are multiple filters, iterate over each filter and add them to the filterParams object
+          req.query.filter.forEach(filterField => {
+            // Check if the filter parameter exists in the request
+            if (req.query[filterField]) {
+              filterParams[filterField] = req.query[filterField]
+            }
+          })
+        }
+      }
 
       const filteredUsers = sortedUsers.filter(user => {
         for (const [key, value] of Object.entries(filterParams)) {

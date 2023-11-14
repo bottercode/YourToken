@@ -17,7 +17,7 @@ const debounce = (func, delay) => {
 
 const InfiniteUsersList = () => {
   const [users, setUsers] = useState([])
-  const [sortBy, setSortBy] = useState('firstName')
+  const [sortBy, setSortBy] = useState('')
   const [filters, setFilters] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(null)
@@ -33,8 +33,7 @@ const InfiniteUsersList = () => {
 
         const filterParams = filters.map(({field, value}) => `${field}&${field}=${encodeURIComponent(value)}`).join('')
 
-        const url = `http://localhost:8080/api/users?page=${page}&sortBy=${sortBy}&filter=${filterParams}`
-
+        const url = `http://localhost:8080/api/users?page=${page}&sort=${sortBy}&filter=${filterParams}`
         const response = await fetch(url)
         const fetchedUsers = await response.json()
         setUsers(prevUsers => [...prevUsers, ...fetchedUsers])
@@ -51,7 +50,7 @@ const InfiniteUsersList = () => {
 
   useEffect(() => {
     fetchUsers()
-  }, [fetchUsers])
+  }, [sortBy, filters, fetchUsers])
 
   const handleSortChange = event => {
     setSortBy(event.target.value)
@@ -123,7 +122,7 @@ const InfiniteUsersList = () => {
           <label className='relative inline-block'>
             <span
               onClick={handleSortByClick}
-              className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 cursor-pointer'>
+              className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center cursor-pointer'>
               Sort By:
             </span>
             <select
@@ -143,7 +142,7 @@ const InfiniteUsersList = () => {
             Add Filter:
             <span
               onClick={handleAddFilterClick}
-              className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 cursor-pointer'>
+              className='text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center cursor-pointer'>
               {isFilterOptionsVisible ? 'Hide Options' : 'Show Options'}
             </span>
             {isFilterOptionsVisible && (
@@ -159,7 +158,7 @@ const InfiniteUsersList = () => {
                 {selectedFilter && <input type='text' value={filterValue} onChange={e => setFilterValue(e.target.value)} className='ml-2 p-2 border rounded' placeholder='Enter Value' />}
                 <button
                   onClick={handleAddFilter}
-                  className='text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700'>
+                  className='text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2'>
                   Add
                 </button>
               </div>
@@ -176,11 +175,11 @@ const InfiniteUsersList = () => {
             </div>
           ))}
         </div>
-        <button
-          onClick={handleApplyFilters}
-          className='focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800'>
-          Apply Filters
-        </button>
+        <div>
+          <button onClick={handleApplyFilters} className='focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 '>
+            Apply Filters
+          </button>
+        </div>
       </div>
 
       <ul>

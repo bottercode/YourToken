@@ -2,8 +2,10 @@ import React from 'react'
 
 const UserCard = ({user}) => {
   return (
-    <div className='flex flex-col items-center p-4 border border-gray-300 rounded-lg shadow-md bg-white transition-transform transform hover:shadow-lg'>
-      <img className='rounded-full h-20 w-20 mb-4' src={user.avatar} alt={user.name} />
+    <div className='flex items-center justify-center p-4 border border-gray-300 rounded-lg shadow-md bg-white transition-transform transform hover:shadow-lg mb-5'>
+      <div className='absolute left-[10%] '>
+        <img className='rounded-full h-20 w-20 mb-4' src={user.avatar} alt={user.name} />
+      </div>
 
       <div className='text-center'>
         <h3 className='text-lg font-semibold text-gray-800 mb-1'>{user.firstName}</h3>

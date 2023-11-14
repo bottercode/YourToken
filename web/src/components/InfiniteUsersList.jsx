@@ -33,7 +33,7 @@ const InfiniteUsersList = () => {
 
         const filterParams = filters.map(({field, value}) => `${field}&${field}=${encodeURIComponent(value)}`).join('')
 
-        const url = `http://localhost:8080/api/users?page=${page}&sort=${sortBy}&filter=${filterParams}`
+        const url = `https://yourtoken-api.onrender.com/api/users?page=${page}&sort=${sortBy}&filter=${filterParams}`
         const response = await fetch(url)
         const fetchedUsers = await response.json()
         setUsers(prevUsers => [...prevUsers, ...fetchedUsers])
